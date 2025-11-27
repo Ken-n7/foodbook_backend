@@ -34,7 +34,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
+      MYSQL_DATABASE: foodbook_db
       MYSQL_USER: laravel
       MYSQL_PASSWORD: secret
     ports:

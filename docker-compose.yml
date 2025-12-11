@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
-    container_name: laravel_app
+    container_name: foodbook_backend
     volumes:
       - ./src:/var/www/html
     environment:
@@ -12,12 +12,12 @@ services:
     depends_on:
       - db
     networks:
-      - laravel
+      - foodbook_backend
 
 
   nginx:
     image: nginx:latest
-    container_name: laravel_nginx
+    container_name: foodbook_nginx
     ports:
       - "8080:80"
     volumes:
@@ -26,11 +26,11 @@ services:
     depends_on:
       - app
     networks:
-      - laravel
+      - foodbook_backend
 
   db:
     image: mysql:8.0
-    container_name: laravel_db
+    container_name: foodbook_mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -42,7 +42,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     networks:
-      - laravel
+      - foodbook_backend
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -50,7 +50,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: laravel_phpmyadmin
+    container_name: foodbook_phpmyadmin
     restart: always
     ports:
       - "8081:80"
@@ -62,10 +62,10 @@ services:
     depends_on:
       - db
     networks:
-      - laravel
+      - foodbook_backend
 
 networks:
-  laravel:
+  foodbook_backend:
 
 volumes:
   dbdata:

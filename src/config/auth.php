@@ -36,17 +36,11 @@ return [
     */
 
     'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
-
-    'api' => [
-        'driver' => 'jwt',   // This tells Laravel to use JWT Auth
-        'provider' => 'users',
-    ],
-],
-    
 
     /*
     |--------------------------------------------------------------------------

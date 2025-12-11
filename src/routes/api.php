@@ -3,44 +3,67 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\FriendController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RestaurantController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-
+// Public Auth routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-// Route::post('/logout', [AuthController::class, 'logout']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::get('/restaurants/search', [RestaurantController::class, 'search']);
+// Routes protected by Sanctum auth
+Route::middleware('auth:sanctum')->group(function () {
 
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-// Route::post('/register', function (Request $request) {
-//     $user = User::create([
-//         'name' => $request->name,
-//         'email' => $request->email,
-//         'password' => Hash::make($request->password),
-//     ]);
+    // Current user info
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 
-//     return [
-//         'token' => $user->createToken('api')->plainTextToken,
-//     ];
-// });
+    // User resource routes (only show, update, delete)
+    Route::resource('users', UserController::class)->only([
+        'show',
+        'update',
+        'destroy'
+    ]);
 
-// Route::post('/login', function (Request $request) {
-//     $user = User::where('email', $request->email)->first();
+        Route::apiResource('restaurants', RestaurantController::class);
+    Route::apiResource('posts', PostController::class);
 
-//     if (! $user || ! Hash::check($request->password, $user->password)) {
-//         abort(401, 'Invalid credentials.');
-//     }
+    Route::apiResource('ratings', RatingController::class)->only([
+        'store',
+        'destroy'
+    ]);
 
-//     return [
-//         'token' => $user->createToken('api')->plainTextToken,
-//     ];
-// });
+    Route::apiResource('comments', CommentController::class)->only([
+        'store',
+        'destroy'
+    ]);
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+    Route::apiResource('likes', LikeController::class)->only([
+        'store',
+        'destroy'
+    ]);
+
+    Route::apiResource('friends', FriendController::class)->only([
+        'store',
+        'update',
+        'destroy'
+    ]);
+
+    // Admin-only routes
+    Route::middleware('admin')->group(function () {
+        Route::apiResource('reports', ReportController::class)->except([
+            'create',
+            'edit'
+        ]);
+    });
+
+    Route::post('/reports', [ReportController::class, 'store']);
+});

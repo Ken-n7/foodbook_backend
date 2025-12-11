@@ -22,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_picture',
+        'bio',
+        'is_admin'
     ];
 
     /**
@@ -45,5 +48,47 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Posts created by user
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    // Ratings made by user
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    // Comments made by user
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    // Likes made by user
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    // Friends where user is the requester
+    public function friends()
+    {
+        return $this->hasMany(Friend::class);
+    }
+
+    // Friendships where user is the friend (inverse)
+    public function friendOf()
+    {
+        return $this->hasMany(Friend::class, 'friend_id');
+    }
+
+    // Reports made by user
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
     }
 }

@@ -3,14 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
     protected $fillable = [
-        'user_id', 'restaurant_id', 'media_url', 'media_type', 'caption',
-        'likes_count', 'comments_count', 'average_rating', 'ratings_count',
+        'user_id',
+        'restaurant_id',
+        'media_url',
+        'media_type',
+        'caption',
+        'likes_count',
+        'comments_count',
     ];
-
+    protected $withCount = ['likes', 'comments']; // auto load counts
+    
     public function user()
     {
         return $this->belongsTo(User::class);

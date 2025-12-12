@@ -7,8 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Restaurant extends Model
 {
     protected $fillable = [
-        'name', 'address', 'latitude', 'longitude', 'average_rating', 'ratings_count',
+        'name',
+        'address',
+        'latitude',
+        'longitude',
+        'average_rating',
+        'ratings_count',
     ];
+
+    protected $withCount = ['posts']; 
 
     public function posts()
     {

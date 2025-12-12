@@ -16,10 +16,15 @@ use App\Http\Controllers\RestaurantController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/restaurants/search', [RestaurantController::class, 'search']);
+
+Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])
+    ->middleware('auth:sanctum');
 // Routes protected by Sanctum auth
 Route::middleware('auth:sanctum')->group(function () {
-
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+    Route::get('/user', [AuthController::class, 'user']);
+
 
     // Current user info
     Route::get('/user', function (Request $request) {
@@ -33,8 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
         'destroy'
     ]);
 
-        Route::apiResource('restaurants', RestaurantController::class);
-    Route::apiResource('posts', PostController::class);
+    Route::apiResource('restaurants', RestaurantController::class);
+    Route::apiResource('posts', PostController::class)->except('toggleLike');
 
     Route::apiResource('ratings', RatingController::class)->only([
         'store',

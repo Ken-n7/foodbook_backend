@@ -14,8 +14,8 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'media_url' => 'required|string', // If uploading file, handle in controller; this could be a URL or path
-            'media_type' => 'required|string|in:image,video',
+            // 'media_url' => 'string', // If uploading file, handle in controller; this could be a URL or path
+            // 'media_type' => 'string|in:image,video',
             'caption' => 'nullable|string|max:1000',
             'restaurant_id' => 'nullable|exists:restaurants,id',
         ];

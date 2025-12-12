@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'post_id', 'user_id', 'reason', 'status',
+        'post_id',
+        'user_id',
+        'reason',
+        'status',
     ];
 
     public function post()

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->text('caption')->nullable();
             $table->unsignedInteger('likes_count')->default(0);
             $table->unsignedInteger('comments_count')->default(0);
-            $table->float('average_rating')->default(0);
-            $table->unsignedInteger('ratings_count')->default(0);
+            // $table->float('average_rating')->default(0);
+            // $table->unsignedInteger('ratings_count')->default(0);
             $table->timestamps();
 
             $table->index('created_at');

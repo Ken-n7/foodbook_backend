@@ -12,6 +12,29 @@ use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
+    public function userPosts(User $user)
+    {
+        $posts = Post::where('user_id', $user->id)
+            ->with([
+                'user',
+                'restaurant',
+                'comments.user',
+                'likes'
+            ])
+            ->withCount(['likes', 'comments'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Check if authenticated user has liked each post
+        if (Auth::check()) {
+            $posts->each(function ($post) {
+                $post->is_liked = $post->likes()->where('user_id', Auth::id())->exists();
+            });
+        }
+
+        return PostResource::collection($posts);
+    }
+
     public function index()
     {
         $posts = Post::with(['user', 'restaurant'])
@@ -142,7 +165,7 @@ class PostController extends Controller
             $post->decrement('likes_count');
             $isLiked = false;
         } else {
-            $post->likes()->create(['post_id' => $post->id, 'user_id'=> $user->id]);
+            $post->likes()->create(['post_id' => $post->id, 'user_id' => $user->id]);
             $post->increment('likes_count');
             $isLiked = true;
         }
